@@ -88,20 +88,6 @@ def delete_profile(login, password):
     conn.commit()
 
 
-def check_status(login):
-    """
-    Проверяет данные о статусе профиля
-    :param login:
-    :return:
-    """
-    cur.execute(f"SELECT status FROM users WHERE username = '{login}'")
-    result = cur.fetchall()
-    if result[0][0] == 1:
-        return True
-    else:
-        return False
-
-
 def get_post(login, title):
     """
     Принимает логин и пароль пользователя, делает запрос в базу данных и возвращает данные запрашиваемого поста
@@ -131,6 +117,46 @@ def add_new_post(login, title, description):
     conn.commit()
 
 
+def remove_post(login, title):
+    """
+    Удаляет пост из базы данных
+    :param login:
+    :param title:
+    :return:
+    """
+    cur.execute(f"DELETE FROM posts WHERE title = '{title}' AND author = (SELECT user_id FROM users WHERE username = '{login}');")
+    conn.commit()
+
+
+def check_post(login, title):
+    """
+    Проверяет существует ли тайтл в базе данных или нет
+    :param login:
+    :param title:
+    :return:
+    """
+    cur.execute(f"SELECT * from posts WHERE title = '{title}' AND author = (SELECT user_id FROM users WHERE username = '{login}');")
+    result = cur.fetchall()
+    if result:
+        return True
+    else:
+        return False
+
+
+def all_posts(login):
+    """
+    Возвращает полный список всех постов задаваемого пользователя
+    :param login:
+    :return:
+    """
+    cur.execute(f"SELECT post_id, title, description, date_of_create FROM posts WHERE author = (SELECT user_id FROM users WHERE username = '{login}')")
+    result = cur.fetchall()
+    if result:
+        return result
+    else:
+        return None
+
+
 if __name__ == "__main__":
     # print(login("Matvey", "Lol12345"))
     # print(check_login('Matvey'))
@@ -139,3 +165,4 @@ if __name__ == "__main__":
     # print(check_status("NastyaLohushka"))
     # print(get_post("Matvey", "Pirozhok"))
     add_new_post("Matvey", "Roker", "I am roker")
+    # remove_post("Matvey", "Roker")

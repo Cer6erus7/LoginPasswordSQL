@@ -20,18 +20,14 @@ while app:
                 if user_password == '/return':
                     break
 
-                if utilities.check_status(user_login):
-                    if utilities.login(user_login, user_password):
-                        username = user_login
-                        main_menu = False
-                        print(info.user_menu)
-                        print(f"Hello, {username}!")
-                        break
-                    else:
-                        print("Something is wrong! Try again!")
-                else:
-                    print("This account was deleted!")
+                if utilities.login(user_login, user_password):
+                    username = user_login
+                    main_menu = False
+                    print(info.user_menu)
+                    print(f"Hello, {username}!")
                     break
+                else:
+                    print("Something is wrong! Try again!")
 
         elif command == "/register":
             while True:
@@ -105,6 +101,23 @@ while app:
                 utilities.add_new_post(username, title, description)
                 print("Your post was successfully added!")
                 break
+
+        elif command == "/all_posts":
+            lst = utilities.all_posts(username)
+            if lst:
+                for i in lst:
+                    print(f"\n{i[0]}-{i[1]}   {i[3]}\n  --{i[2]}")
+                print()
+            else:
+                print("You don't have any posts yet!")
+
+        elif command == "/remove_post":
+            post_title = input('Write title of a post - ')
+            if utilities.check_post(username, post_title):
+                utilities.remove_post(username, post_title)
+                print("Your post was successfully removed!")
+            else:
+                print("This post not found!")
 
         elif command == "/exit":
             print("Goodbye!")
