@@ -25,6 +25,30 @@ while main_menu:
             else:
                 print("Something is wrong! Try again!")
 
+    elif command == "/register":
+        while True:
+            reg_login = input("Write your new login - ")
+            if reg_login == '/return':
+                break
+            reg_password = input("Write your new password - ")
+            if reg_password == '/return':
+                break
+            reg_second_password = input("Write your new password again - ")
+            if reg_second_password == '/return':
+                break
+
+            if not utilities.check_login(reg_login):
+                if reg_password == reg_second_password:
+                    utilities.register(reg_login, reg_password)
+                    print('You are successfully sign in!')
+                    main_menu = False
+                    username = reg_login
+                    break
+                else:
+                    print('Passwords are not the same!')
+            else:
+                print('This login is already exist!')
+
     elif command == "/help":
         print(info.main_menu)
 
@@ -34,5 +58,3 @@ while main_menu:
 
     else:
         print("Write correct request!")
-
-print(f"\nWelcome back, {username}")

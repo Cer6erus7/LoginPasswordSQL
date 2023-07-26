@@ -1,7 +1,9 @@
 import psycopg2
+import datetime
 
 
 conn = psycopg2.connect(dbname="loginpasswordsql", user="cer6erus7")
+cur = conn.cursor()
 
 def login(login, password):
     """
@@ -12,7 +14,6 @@ def login(login, password):
     :param password:
     :return:
     """
-    cur = conn.cursor()
     cur.execute(f"SELECT username, password FROM users WHERE username = '{login}'")
     result = cur.fetchall()
     try:
@@ -24,5 +25,32 @@ def login(login, password):
         return False
 
 
+def check_login(login):
+    """
+    Принимает логин и просматривает его в базе данных. Если такой лонин существует, возвращает значение True, если
+    же нет возвращает False.
+    :param login:
+    :return:
+    """
+    cur.execute(f"SELECT username FROM users WHERE username = '{login}'")
+    if cur.fetchall():
+        return True
+    else:
+        return False
+
+
+def register(login, password):
+    """
+    Принимает логин и пароль пользователя и создает новый профиль в базе данных;
+    :param login:
+    :param password:
+    :return:
+    """
+    time = datetime.datetime.now()
+    cur.execute(f"INSERT INTO users (username, password, date_of_create, status) VALUES ('{login}', '{password}', '{time}', 1);")
+    conn.commit()
+
+
 if __name__ == "__main__":
     print(login("Matvey", "Lol12345"))
+    print(check_login('Matvey'))
