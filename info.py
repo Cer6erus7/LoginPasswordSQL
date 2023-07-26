@@ -9,7 +9,7 @@ main_menu = """
 user_menu = """
 /page - look at information
 /help - list of all commands
-/post - search post by id
+/post - search post by title
 /all_posts - look at all posts
 /add_post - make a new post
 /remove_post - delete a post

@@ -102,9 +102,40 @@ def check_status(login):
         return False
 
 
+def get_post(login, title):
+    """
+    Принимает логин и пароль пользователя, делает запрос в базу данных и возвращает данные запрашиваемого поста
+    :param login:
+    :param title:
+    :return:
+    """
+    cur.execute(f"SELECT title, description, date_of_create FROM posts WHERE title = '{title}' AND author = (SELECT user_id FROM users WHERE username = '{login}');")
+    result = cur.fetchall()
+    if result:
+        time = result[0][2]
+        return {"title": result[0][0], "description": result[0][1], "date_od_create": time.strftime("%d-%m-%y %H:%M:%S")}
+    else:
+        return None
+
+
+def add_new_post(login, title, description):
+    """
+    Принимает логин, название поста и текст, и записывает все эти данные в базу данных
+    :param login:
+    :param title:
+    :param description:
+    :return:
+    """
+    time = datetime.datetime.now()
+    cur.execute(f"INSERT INTO posts (title, description, date_of_create, author) VALUES ('{title}', '{description}', '{time}', (SELECT user_id FROM users WHERE username = '{login}'));")
+    conn.commit()
+
+
 if __name__ == "__main__":
     # print(login("Matvey", "Lol12345"))
     # print(check_login('Matvey'))
     # print(page_info("Matvey"))
-    print(check_pass("Matvey", "Lol12345"))
-    print(check_status("NastyaLohushka"))
+    # print(check_pass("Matvey", "Lol12345"))
+    # print(check_status("NastyaLohushka"))
+    # print(get_post("Matvey", "Pirozhok"))
+    add_new_post("Matvey", "Roker", "I am roker")

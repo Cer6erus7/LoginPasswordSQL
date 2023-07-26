@@ -86,6 +86,26 @@ while app:
             main_menu = True
             break
 
+        elif command == "/post":
+            user_post = input("Write title of your post - ")
+            if utilities.get_post(username, user_post):
+                post = utilities.get_post(username, user_post)
+                print(f"\n{post['title']}   {post['date_od_create']}\n--{post['description']}\n")
+            else:
+                print("Post do not exist!")
+
+        elif command == "/add_post":
+            while True:
+                title = input("Write title of your post - ")
+                if title == "/return":
+                    break
+                description = input("Write text - ")
+                if description == "/return":
+                    break
+                utilities.add_new_post(username, title, description)
+                print("Your post was successfully added!")
+                break
+
         elif command == "/exit":
             print("Goodbye!")
             username = None
